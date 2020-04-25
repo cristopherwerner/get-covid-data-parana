@@ -24,9 +24,14 @@ def getData(date, url_data, date_control):
     else:
         url = ("http://www.saude.pr.gov.br/arquivos/File/INFORME_EPIDEMIOLOGICO_{}.csv"
                ).format(url_data)
-    dataset = pd.read_csv(url, sep=",", encoding='ISO-8859-1')
+    dataset = pd.read_csv(
+        url, sep=",", encoding='ISO-8859-1', error_bad_lines=False)
     dataset["Data"] = date
-
+    empty_cols = [
+        col for col in dataset.columns if dataset[col].isnull().all()]
+    dataset.drop(empty_cols,
+                 axis=1,
+                 inplace=True)
     return(dataset)
 
 
