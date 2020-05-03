@@ -25,13 +25,20 @@ def getData(date, url_data, date_control):
         url = ("http://www.saude.pr.gov.br/arquivos/File/INFORME_EPIDEMIOLOGICO_{}.csv"
                ).format(url_data)
     dataset = pd.read_csv(
-        url, sep=",", encoding='ISO-8859-1', error_bad_lines=False)
+        url, sep=',|;', encoding='ISO-8859-1', error_bad_lines=False, engine='python')
     dataset["Data"] = date
-    empty_cols = [
-        col for col in dataset.columns if dataset[col].isnull().all()]
-    dataset.drop(empty_cols,
-                 axis=1,
-                 inplace=True)
+    date = datetime.strptime(date, '%d/%m/%Y')
+    datevar = datetime(2020, 4, 27)
+    if date > datevar:
+        pass
+    else:
+        empty_cols = [
+            col for col in dataset.columns if dataset[col].isnull().all()]
+
+        dataset.drop(empty_cols,
+                     axis=1,
+                     inplace=True)
+
     return(dataset)
 
 
